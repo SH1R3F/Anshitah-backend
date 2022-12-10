@@ -15,7 +15,9 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'avatar' => url($this->avatar),
+            'avatar'       => url($this->avatar),
+            'milaf_howiya' => url($this->milaf_howiya),
+            'milaf_wadifi' => url($this->milaf_wadifi),
 
             $this->merge(parent::toArray($request))
         ];
