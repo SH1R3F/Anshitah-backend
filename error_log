@@ -1,0 +1,24 @@
+[06-Nov-2021 01:18:54 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[06-Nov-2021 01:18:54 UTC] PHP Warning:  copy(https://getcomposer.org/installer): failed to open stream: no suitable wrapper could be found in Command line code on line 1
+[06-Nov-2021 01:19:09 UTC] PHP Warning:  hash_file(composer-setup.php): failed to open stream: No such file or directory in Command line code on line 1
+[06-Nov-2021 01:19:09 UTC] PHP Warning:  unlink(composer-setup.php): No such file or directory in Command line code on line 1
+[06-Nov-2021 01:19:28 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[06-Nov-2021 01:19:28 UTC] PHP Warning:  copy(https://getcomposer.org/installer): failed to open stream: no suitable wrapper could be found in Command line code on line 1
+[06-Nov-2021 01:19:35 UTC] PHP Warning:  hash_file(composer-setup.php): failed to open stream: No such file or directory in Command line code on line 1
+[06-Nov-2021 01:19:35 UTC] PHP Warning:  unlink(composer-setup.php): No such file or directory in Command line code on line 1
+[06-Nov-2021 01:39:09 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[06-Nov-2021 01:39:09 UTC] PHP Warning:  copy(https://getcomposer.org/installer): failed to open stream: no suitable wrapper could be found in Command line code on line 1
+[10-Nov-2021 08:43:01 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[10-Nov-2021 08:43:01 UTC] PHP Warning:  copy(https://getcomposer.org/installer): failed to open stream: no suitable wrapper could be found in Command line code on line 1
+[10-Nov-2021 08:43:29 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[10-Nov-2021 08:43:29 UTC] PHP Warning:  copy(https://getcomposer.org/installer): failed to open stream: no suitable wrapper could be found in Command line code on line 1
+[09-Dec-2021 14:37:54 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[09-Dec-2021 14:37:54 UTC] PHP Warning:  copy(https://getcomposer.org/installer): failed to open stream: no suitable wrapper could be found in Command line code on line 1
+[09-Dec-2021 14:37:54 UTC] PHP Warning:  hash_file(composer-setup.php): failed to open stream: No such file or directory in Command line code on line 1
+[09-Dec-2021 14:37:54 UTC] PHP Warning:  unlink(composer-setup.php): No such file or directory in Command line code on line 1
+[09-Dec-2021 14:37:57 UTC] PHP Warning:  unlink(composer-setup.php): No such file or directory in Command line code on line 1
+[09-Dec-2021 14:38:04 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[09-Dec-2021 14:38:04 UTC] PHP Warning:  copy(https://getcomposer.org/installer): failed to open stream: no suitable wrapper could be found in Command line code on line 1
+[09-Dec-2021 14:38:26 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[09-Dec-2021 14:38:26 UTC] PHP Warning:  copy(https://getcomposer.org/installer): failed to open stream: no suitable wrapper could be found in Command line code on line 1
+[23-Mar-2022 11:07:24 UTC] PHP Fatal error:  Cannot declare class CreateQuizzesTable, because the name is already in use in /home/anshitahco/public_html/nashat/database/migrations/2022_01_04_204438_create_quizzes_table.php on line 7
