@@ -31,7 +31,19 @@ class User extends Authenticatable
         'sana_dirassia',
         'ramz_wizari',
         'school',
-        'classes'
+        'classes',
+        'avatar',
+        'milaf_howiya',
+        'milaf_wadifi',
+        'address',
+        'university',
+        'takhasos',
+        'date_graduation',
+        'date_job',
+        'current_job',
+        'rakm_wadifi',
+        'date_birth',
+
     ];
 
     /**
@@ -56,5 +68,20 @@ class User extends Authenticatable
     public function folders()
     {
         return $this->hasMany(Folder::class);
+    }
+
+    public function setAvatarAttribute($value)
+    {
+        $this->attributes['avatar'] = str_replace('http://localhost:8000/', '', $value);
+    }
+
+    public function setMilafWadifiAttribute($value)
+    {
+        $this->attributes['milaf_wadifi'] = str_replace('http://localhost:8000/', '', $value);
+    }
+
+    public function setMilafHowiyaAttribute($value)
+    {
+        $this->attributes['milaf_howiya'] = str_replace('http://localhost:8000/', '', $value);
     }
 }

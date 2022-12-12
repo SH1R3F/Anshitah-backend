@@ -16,5 +16,6 @@ Route::prefix('/auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     /* Manage My Profile */
-    Route::post('/my-profile', [ProfileController::class, 'update'])->middleware(['permission:تعديل البيانات']);
+    Route::get('/my-profile', [ProfileController::class, 'show'])->middleware(['permission:قسم بياناتي']);
+    Route::put('/my-profile', [ProfileController::class, 'update'])->middleware(['permission:تعديل البيانات']);
 });

@@ -8,15 +8,18 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\AuthUserResource;
-use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
 
     public function user(Request $request): JsonResponse
     {
+        $user = Auth::user()->load('roles');
         return response()->json(
-            UserResource::make($request->user())
+            [
+                'userData'    => AuthUserResource::make($user),
+                'permissions' => $user->roles()->first()->permissions->map(fn ($p) => ['action' => $p->name])->push(['action' => 'basic']),
+            ]
         );
     }
 
