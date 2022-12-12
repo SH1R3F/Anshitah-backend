@@ -24,7 +24,6 @@ class User extends Authenticatable
         'password',
         'level',
         'mobile',
-        'password',
         'rakm_howiya',
         'city',
         'sexe',
