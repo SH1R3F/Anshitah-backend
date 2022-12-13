@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Http\Request;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -34,6 +35,7 @@ class User extends Authenticatable
         'avatar',
         'milaf_howiya',
         'milaf_wadifi',
+        'al_jadwal_dirassi',
         'address',
         'university',
         'takhasos',
@@ -42,7 +44,7 @@ class User extends Authenticatable
         'current_job',
         'rakm_wadifi',
         'date_birth',
-
+        'field'
     ];
 
     /**
@@ -64,6 +66,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function scopeFilter($builder, Request $request)
+    {
+        return $builder
+            ->when($request->q, fn ($builder) => $builder->where('users.name', 'like', "%{$request->q}%"))
+            ->when($request->role, fn ($builder) => $builder->where('roles.name', $request->role));
+    }
+
     public function folders()
     {
         return $this->hasMany(Folder::class);
@@ -71,16 +80,16 @@ class User extends Authenticatable
 
     public function setAvatarAttribute($value)
     {
-        $this->attributes['avatar'] = str_replace('http://localhost:8000/', '', $value);
+        $this->attributes['avatar'] = $value === 'null' ? NULL : str_replace('http://localhost:8000/', '', $value);
     }
 
     public function setMilafWadifiAttribute($value)
     {
-        $this->attributes['milaf_wadifi'] = str_replace('http://localhost:8000/', '', $value);
+        $this->attributes['milaf_wadifi'] = $value === 'null' ? NULL : str_replace('http://localhost:8000/', '', $value);
     }
 
     public function setMilafHowiyaAttribute($value)
     {
-        $this->attributes['milaf_howiya'] = str_replace('http://localhost:8000/', '', $value);
+        $this->attributes['milaf_howiya'] = $value === 'null' ? NULL : str_replace('http://localhost:8000/', '', $value);
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\Api\RoleController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -21,9 +22,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/my-profile', [ProfileController::class, 'update'])->middleware(['permission:تعديل البيانات']);
 
     /* Manage user roles */
-    Route::get('/roles', [RoleController::class, 'index'])->middleware(['permission:إعطاء الصلاحيات']);
-    Route::post('/roles', [RoleController::class, 'store'])->middleware(['permission:إعطاء الصلاحيات']);
-    Route::get('/roles/{role}', [RoleController::class, 'show'])->middleware(['permission:إعطاء الصلاحيات']);
-    Route::put('/roles/{role}', [RoleController::class, 'update'])->middleware(['permission:إعطاء الصلاحيات']);
-    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->middleware(['permission:إعطاء الصلاحيات']);
+    Route::resource('roles', RoleController::class)->except(['edit', 'create'])->middleware(['permission:إعطاء الصلاحيات']);
+
+
+    /* Manage users */
+    Route::get('/users/stats', [UserController::class, 'stats'])->middleware(['permission:عرض المستخدمين']);
+    Route::post('/users/import/{type}', [UserController::class, 'import'])->where('type', 'students')->middleware(['permission:عرض المستخدمين']);
+    Route::resource('users', UserController::class)->except(['edit', 'create'])->middleware(['permission:عرض المستخدمين']);
 });
