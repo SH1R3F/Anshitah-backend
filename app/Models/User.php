@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Searchable;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -69,7 +70,6 @@ class User extends Authenticatable
     public function scopeFilter($builder, Request $request)
     {
         return $builder
-            ->when($request->q, fn ($builder) => $builder->where('users.name', 'like', "%{$request->q}%"))
             ->when($request->role, fn ($builder) => $builder->where('roles.name', $request->role));
     }
 

@@ -51,6 +51,7 @@ class UserController extends Controller
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->filter($request)
+            ->search($request, 'users.name')
             ->orderBy('roles.id')
             ->paginate(is_numeric($request->perPage) ? $request->perPage : 10, ['*'], 'page', is_numeric($request->currentPage) ? $request->currentPage : 1);
 
