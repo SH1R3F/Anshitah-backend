@@ -60,6 +60,31 @@ class SupportSeeder extends Seeder
                 'created_at' => Carbon::now(),
             ]);
         }
+
+        // Seed tickets
+        for ($x = 0; $x < 50; $x++) {
+            DB::table('inquires_tickets')->insert([
+                'title' => $this->faker->sentence(),
+                'user_id' => User::inRandomOrder()->first()->id,
+                'status' => rand(0, 1),
+                'updated_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+            ]);
+        }
+
+        // Seed messages
+        for ($x = 0; $x < 300; $x++) {
+            $ticket = DB::table('inquires_tickets')->inRandomOrder()->first();
+            DB::table('inquires_messages')->insert([
+                'ticket_id' => $ticket->id,
+                'body' => $this->faker->sentence(),
+                'user_id' => $ticket->user_id,
+                'support_id' => 1,
+                'sender' => rand(0, 1),
+                'updated_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+            ]);
+        }
     }
 
 

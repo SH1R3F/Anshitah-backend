@@ -22,9 +22,9 @@ class CreateInquiresMessagesTable extends Migration
             $table->unsignedBigInteger('support_id')->nullable();
             $table->boolean('sender')->default(1);
             $table->timestamps();
-            
+
             $table->foreign('support_id', 'fk_support_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('ticket_id', 'fk_ticket_id')->references('id')->on('support_tickets')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('ticket_id', 'fk_ticket_id')->references('id')->on('inquires_tickets')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('user_id', 'fk_users_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
     }

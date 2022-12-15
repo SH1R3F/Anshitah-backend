@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\YearController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\SupportController;
 
 Route::prefix('/auth')->group(function () {
@@ -36,11 +37,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('years', YearController::class)->except(['edit', 'create'])->middleware(['permission:عرض المستخدمين']);
 
     /* Technical Support Routes */
-    Route::prefix('support')->group(function () {
+    Route::prefix('support')->middleware(['permission:إدارة الدعم الفني'])->group(function () {
         Route::get('/', [SupportController::class, 'index']);
         Route::get('/{ticket}', [SupportController::class, 'ticket']);
         Route::post('/{ticket}/close', [SupportController::class, 'close']);
         Route::delete('/{ticket}', [SupportController::class, 'delete']);
         Route::post('/{ticket}/messages', [SupportController::class, 'message']);
+    });
+
+    /* Inquires support Routes */
+    Route::prefix('inquiry')->middleware(['permission:إدارة الإستفسارات'])->group(function () {
+        Route::get('/', [InquiryController::class, 'index']);
+        Route::get('/{ticket}', [InquiryController::class, 'ticket']);
+        Route::post('/{ticket}/close', [InquiryController::class, 'close']);
+        Route::delete('/{ticket}', [InquiryController::class, 'delete']);
+        Route::post('/{ticket}/messages', [InquiryController::class, 'message']);
     });
 });

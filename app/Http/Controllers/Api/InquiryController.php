@@ -15,24 +15,22 @@ use App\Http\Resources\SupportResource;
 use App\Http\Resources\SupportCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SupportController extends Controller
+class InquiryController extends Controller
 {
-
-
     public function index(Request $request): JsonResource
     {
-        $tickets = DB::table('support_tickets')
-            ->join('users', 'users.id', '=', 'support_tickets.user_id')
-            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'support_tickets.user_id')
+        $tickets = DB::table('inquires_tickets')
+            ->join('users', 'users.id', '=', 'inquires_tickets.user_id')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'inquires_tickets.user_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->select('support_tickets.id', 'support_tickets.title', 'support_tickets.status', 'support_tickets.updated_at', 'users.id as userid', 'users.name as username', 'users.avatar', 'roles.name as rolename')
+            ->select('inquires_tickets.id', 'inquires_tickets.title', 'inquires_tickets.status', 'inquires_tickets.updated_at', 'users.id as userid', 'users.name as username', 'users.avatar', 'roles.name as rolename')
             ->when($request->q, function ($builder) use ($request) {
                 return $builder
                     ->where('users.name', 'LIKE', "%{$request->q}%")
-                    ->orWhere('support_tickets.title', 'LIKE', "%{$request->q}%");
+                    ->orWhere('inquires_tickets.title', 'LIKE', "%{$request->q}%");
             })
-            ->orderBy('support_tickets.status', 'DESC')
-            ->orderBy('support_tickets.id', 'DESC')
+            ->orderBy('inquires_tickets.status', 'DESC')
+            ->orderBy('inquires_tickets.id', 'DESC')
             ->limit(30)
             ->get();
 
@@ -43,15 +41,15 @@ class SupportController extends Controller
     public function ticket($id): JsonResponse
     {
 
-        $ticket = DB::table('support_tickets')->where('support_tickets.id', $id)
-            ->join('users', 'users.id', '=', 'support_tickets.user_id')
-            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'support_tickets.user_id')
+        $ticket = DB::table('inquires_tickets')->where('inquires_tickets.id', $id)
+            ->join('users', 'users.id', '=', 'inquires_tickets.user_id')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'inquires_tickets.user_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->orderBy('support_tickets.updated_at', 'ASC')
-            ->select('support_tickets.id', 'support_tickets.title', 'support_tickets.status', 'support_tickets.updated_at', 'users.id as userid', 'users.name as username', 'users.avatar', 'roles.name as rolename')
+            ->orderBy('inquires_tickets.updated_at', 'ASC')
+            ->select('inquires_tickets.id', 'inquires_tickets.title', 'inquires_tickets.status', 'inquires_tickets.updated_at', 'users.id as userid', 'users.name as username', 'users.avatar', 'roles.name as rolename')
             ->first();
 
-        $messages = DB::table('support_messages')->where('ticket_id', $id)->orderBy('updated_at', 'ASC')->get();
+        $messages = DB::table('inquires_messages')->where('ticket_id', $id)->orderBy('updated_at', 'ASC')->get();
 
         return response()->json([
             'ticket' => SupportResource::make($ticket),
@@ -61,13 +59,13 @@ class SupportController extends Controller
 
     public function close($id): Response
     {
-        DB::table('support_tickets')->where('id', $id)->update(['status' => 0]);
+        DB::table('inquires_tickets')->where('id', $id)->update(['status' => 0]);
         return response()->noContent(Response::HTTP_OK);
     }
 
     public function delete($id): Response
     {
-        DB::table('support_tickets')->where('id', $id)->delete();
+        DB::table('inquires_tickets')->where('id', $id)->delete();
         return response()->noContent(Response::HTTP_OK);
     }
 
@@ -79,7 +77,7 @@ class SupportController extends Controller
             'attachment' => 'nullable'
         ]);
 
-        $query = DB::table('support_tickets')->where('id', $id);
+        $query = DB::table('inquires_tickets')->where('id', $id);
         $ticket = $query->first();
         $query->update(['updated_at' => Carbon::now()]);
 
@@ -89,7 +87,7 @@ class SupportController extends Controller
             $data['attachment'] = env('STORAGE_PATH') . 'app/public/' . $path;
         }
 
-        $id = DB::table('support_messages')->insertGetId([
+        $id = DB::table('inquires_messages')->insertGetId([
             'ticket_id' => $ticket->id,
             'body' => $data['body'],
             'attachment' => $data['attachment'],
@@ -99,7 +97,7 @@ class SupportController extends Controller
             'updated_at' => Carbon::now(),
             'created_at' => Carbon::now(),
         ]);
-        $message = DB::table('support_messages')->find($id);
+        $message = DB::table('inquires_messages')->find($id);
         return ChatResource::make($message);
     }
 }
