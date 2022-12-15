@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\YearController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\SupportController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -33,4 +34,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /* Manage years */
     Route::resource('years', YearController::class)->except(['edit', 'create'])->middleware(['permission:عرض المستخدمين']);
+
+    /* Technical Support Routes */
+    Route::prefix('support')->group(function () {
+        Route::get('/', [SupportController::class, 'index']);
+        Route::get('/{ticket}', [SupportController::class, 'ticket']);
+        Route::post('/{ticket}/close', [SupportController::class, 'close']);
+        Route::delete('/{ticket}', [SupportController::class, 'delete']);
+        Route::post('/{ticket}/messages', [SupportController::class, 'message']);
+    });
 });
