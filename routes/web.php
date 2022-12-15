@@ -156,7 +156,7 @@ Route::post('/years/delete/{id}', [YearController::class, 'destroy'])->name('del
 //     ]);
 // })->name('students');
 
-Route::get('/roadalnashat',function(){
+Route::get('/roadalnashat', function () {
 
     $years = [];
     foreach (Year::all('id', 'number') as $year) {
@@ -165,14 +165,14 @@ Route::get('/roadalnashat',function(){
 
     return view('roadalnashat.index', [
         'title' => 'رواد النشاط',
-        'users' => User::whereHas('roles' , function($query) {
-            $query->where('name','=', 'رائد نشاط');
+        'users' => User::whereHas('roles', function ($query) {
+            $query->where('name', '=', 'رائد نشاط');
         })->get(),
         'years' => $years
     ]);
 })->name('roadalnashat');
 
-Route::get('/students',function(){
+Route::get('/students', function () {
 
     $years = [];
     foreach (Year::all('id', 'number') as $year) {
@@ -181,40 +181,40 @@ Route::get('/students',function(){
 
     return view('students.index', [
         'title' => 'الطلاب',
-        'users' => User::whereHas('roles' , function($query) {
-            $query->where('name','=', 'طالب');
+        'users' => User::whereHas('roles', function ($query) {
+            $query->where('name', '=', 'طالب');
         })->get(),
         'years' => $years
     ]);
 })->name('students');
 
 
-Route::get('/student/info',function(){
+Route::get('/student/info', function () {
 
-    return view('students-app.info',[
+    return view('students-app.info', [
         'title' => 'معلوماتي الشخصية'
     ]);
 })->name('student.info');
 
 
-Route::get('/check/{permission}',function($p){
+Route::get('/check/{permission}', function ($p) {
     $permission = 'رفع ملف ' . $p;
-    if(Auth::user()->can($permission)) return true;
+    if (Auth::user()->can($permission)) return true;
     return false;
 });
 
 
-Route::get('/quiz/{id}' , function($id){
+Route::get('/quiz/{id}', function ($id) {
     $quiz = Quiz::findOrFail($id);
-    $questions1 = Question::where('quiz_id' , $quiz->id)
-                            ->where('topic' , 'الاستدلال اللغوى وفهم المقروء')->get();
-    $questions2 = Question::where('quiz_id' , $quiz->id)
-                            ->where('topic' , 'الاستدلال الرياضي والمكاني')->get();
-    $questions3 = Question::where('quiz_id' , $quiz->id)
-                            ->where('topic' , 'الاستدلال العلمي والميكانيكي')->get();
-    $questions4 = Question::where('quiz_id' , $quiz->id)
-                            ->where('topic' , 'المرونة العقليه')->get();
-    return view('students-app.quizzes.quiz',[
+    $questions1 = Question::where('quiz_id', $quiz->id)
+        ->where('topic', 'الاستدلال اللغوى وفهم المقروء')->get();
+    $questions2 = Question::where('quiz_id', $quiz->id)
+        ->where('topic', 'الاستدلال الرياضي والمكاني')->get();
+    $questions3 = Question::where('quiz_id', $quiz->id)
+        ->where('topic', 'الاستدلال العلمي والميكانيكي')->get();
+    $questions4 = Question::where('quiz_id', $quiz->id)
+        ->where('topic', 'المرونة العقليه')->get();
+    return view('students-app.quizzes.quiz', [
         'title' => 'بدأ الإختبار',
         'questions1' => $questions1,
         'questions2' => $questions2,
@@ -223,10 +223,10 @@ Route::get('/quiz/{id}' , function($id){
         'quiz' => $quiz
     ]);
 })->name('quiz');
-Route::post('/quiz/{id}' , function($id , Request $req){
-    foreach($req->q as $q){
-        if($q['answer'] == 'null'){
-            return back()->with('delete' , 'لم تدخل كل الأجوبة');
+Route::post('/quiz/{id}', function ($id, Request $req) {
+    foreach ($req->q as $q) {
+        if ($q['answer'] == 'null') {
+            return back()->with('delete', 'لم تدخل كل الأجوبة');
         }
     }
     $quiz = Quiz::findOrFail($id);
@@ -234,14 +234,14 @@ Route::post('/quiz/{id}' , function($id , Request $req){
     $pdfQuestions = [];
     $pdfAnswers = [];
     $pdfMarks = [];
-    foreach($req->q as $q){
+    foreach ($req->q as $q) {
         $question = Question::findOrFail($q['question']);
         $pdfQuestions[] = $question;
-        if($q['answer'] == $question->answer){
+        if ($q['answer'] == $question->answer) {
             $marks += $question->mark;
             $pdfAnswers[] = $q['answer'];
             $pdfMarks[] = $question->mark;
-        }else{
+        } else {
             $pdfAnswers[] = $q['answer'];
             $pdfMarks[] = 0;
         }
@@ -268,35 +268,36 @@ Route::post('/quiz/{id}' , function($id , Request $req){
     $quizdone->save();
 
 
-    return redirect()->to('/')->with('update' , 'ثم إرسال الإختبار يمكنك الإطلاع على النتيجة');
+    return redirect()->to('/')->with('update', 'ثم إرسال الإختبار يمكنك الإطلاع على النتيجة');
 })->name('quiz.store');
 
 
 /**
  * نقل الملفات من مجلد لمجلد
  */
-Route::get('/shared/files/{id}' , function($id){
+Route::get('/shared/files/{id}', function ($id) {
     return response()->json(Shared::sharedFiles($id));
 });
-Route::post('/transfer' , function(Request $req){
+Route::post('/transfer', function (Request $req) {
     $shared = Shared::findOrFail($req->shared);
     /**
      * Deal with shared files
      */
-    if($req->items){
-        foreach($req->items as $file){
+    if ($req->items) {
+        foreach ($req->items as $file) {
             $shared_file = FileShared::findOrFail($file);
             $shared_file->shared_id = $shared->id;
             $shared_file->save();
         }
     }
-    return back()->with('update' , 'تم نقل الملفات بنجاح');
+    return back()->with('update', 'تم نقل الملفات بنجاح');
 })->name('transfer.shared.file');
 
 /**
  * وقت التطوع للمدرسين
  */
-Route::get('/donate/teacher' , function(){
+// Submit donate form
+Route::get('/donate/teacher', function () {
     $schools = [
         'ابتدائية الأندلس',
         'ابتدائية الإمام عاصم لتحفيظ القرآن',
@@ -335,7 +336,7 @@ Route::get('/donate/teacher' , function(){
         'الرابع ابتدائي',
         'الخامس ابتدائي',
         'السادس ابتدائي'
-    ]; 
+    ];
     $sofof2 = [
         'الأول متوسط',
         'الثاني متوسط',
@@ -346,16 +347,18 @@ Route::get('/donate/teacher' , function(){
         'الثاني ثانوي',
         'الثالث ثانوي'
     ];
-    $fosol = [1,2,3,4,5,6,7,8,9];
-    return view('donate-teacher.student' , [
+    $fosol = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    return view('donate-teacher.student', [
         'schools' => $schools,
         'sofof1' => $sofof1,
         'sofof2' => $sofof2,
         'sofof3' => $sofof3,
         'fosol' => $fosol,
     ]);
-})->middleware(['auth' , 'permission:مشاركات المعلمين']);
-Route::post('/donate-post/teacher' , function(Request $req){
+})->middleware(['auth', 'permission:مشاركات المعلمين']);
+
+// Submit donate request
+Route::post('/donate-post/teacher', function (Request $req) {
     $req->validate([
         'name' => 'required',
         'school' => 'required',
@@ -366,16 +369,18 @@ Route::post('/donate-post/teacher' , function(Request $req){
     $donate->name   = $req->name;
     $donate->school = $req->school;
     // file
-    if($req->hasFile('file')){
+    if ($req->hasFile('file')) {
         $donate->file = $req->file->store('donates-teachers');
     }
     // path
-    if($req->path)
-    $donate->path = $req->path;
+    if ($req->path)
+        $donate->path = $req->path;
     $donate->save();
-    return back()->with('success' , 'تم ارسال المشاركة');
+    return back()->with('success', 'تم ارسال المشاركة');
 })->name('donate-teacher-post');
-Route::get('/donate/teacher/active' , function(){
+
+// List donates
+Route::get('/donate/teacher/active', function () {
     $schools = [
         'ابتدائية الأندلس',
         'ابتدائية الإمام عاصم لتحفيظ القرآن',
@@ -415,7 +420,7 @@ Route::get('/donate/teacher/active' , function(){
         'الصف الخامس',
         'الصف السادس',
     ];
-    $fosol = [1,2,3,4,5,6,7,8,9];
+    $fosol = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     $donates = DonateTeacher::all();
     if (isset($_GET['name']) || isset($_GET['school'])) {
         $name   = $_GET['name'] ?? '';
@@ -424,7 +429,7 @@ Route::get('/donate/teacher/active' , function(){
             ::where(
                 [
                     ['name', 'like', "%$name%"],
-                    ['school' , 'like' , "%$school%"]
+                    ['school', 'like', "%$school%"]
                 ]
             )
             // ->orWhere('school' , 'like' , "%$school%")
@@ -433,7 +438,7 @@ Route::get('/donate/teacher/active' , function(){
             // ->paginate(7);
             ->get();
     }
-    return view('donate-teacher.active' , [
+    return view('donate-teacher.active', [
         'title' => 'المشاركات الموافق عليها',
         'donates' => $donates,
         'schools' => $schools,
@@ -441,13 +446,14 @@ Route::get('/donate/teacher/active' , function(){
         'fosol' => $fosol,
     ]);
 })
-->middleware(['permission:المشاركات الموافق عليها'])
-->name('donate.teacher.active');
+    ->middleware(['permission:المشاركات الموافق عليها'])
+    ->name('donate.teacher.active');
 
 /**
  * وقت التطوع
  */
-Route::get('/donate' , function(){
+// Submit form
+Route::get('/donate', function () {
     $schools = [
         'ابتدائية الأندلس',
         'ابتدائية الإمام عاصم لتحفيظ القرآن',
@@ -486,7 +492,7 @@ Route::get('/donate' , function(){
         'الرابع ابتدائي',
         'الخامس ابتدائي',
         'السادس ابتدائي'
-    ]; 
+    ];
     $sofof2 = [
         'الأول متوسط',
         'الثاني متوسط',
@@ -497,8 +503,8 @@ Route::get('/donate' , function(){
         'الثاني ثانوي',
         'الثالث ثانوي'
     ];
-    $fosol = [1,2,3,4,5,6,7,8,9];
-    return view('donate.student' , [
+    $fosol = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    return view('donate.student', [
         'schools' => $schools,
         'sofof1' => $sofof1,
         'sofof2' => $sofof2,
@@ -506,7 +512,8 @@ Route::get('/donate' , function(){
         'fosol' => $fosol,
     ]);
 });
-Route::post('/donate-post' , function(Request $req){
+// Post submit
+Route::post('/donate-post', function (Request $req) {
     $req->validate([
         'name' => 'required',
         'school' => 'required',
@@ -521,20 +528,20 @@ Route::post('/donate-post' , function(Request $req){
     $donate->saf    = $req->saf;
     $donate->fasle  = $req->fasle;
     // file
-    if($req->hasFile('file')){
+    if ($req->hasFile('file')) {
         $donate->file = $req->file->store('donates');
     }
     // path
-    if($req->path)
-    $donate->path = $req->path;
+    if ($req->path)
+        $donate->path = $req->path;
     $donate->save();
-    return back()->with('success' , 'تم ارسال المشاركة');
+    return back()->with('success', 'تم ارسال المشاركة');
 })->name('donate-post');
 
 
-Route::group(['middleware' => 'auth'] , function(){
+Route::group(['middleware' => 'auth'], function () {
     // المشاركات الموافق عليها
-    Route::get('/donate/active' , function(){
+    Route::get('/donate/active', function () {
         $schools = [
             'ابتدائية الأندلس',
             'ابتدائية الإمام عاصم لتحفيظ القرآن',
@@ -574,23 +581,26 @@ Route::group(['middleware' => 'auth'] , function(){
             'الصف الخامس',
             'الصف السادس',
         ];
-        $fosol = [1,2,3,4,5,6,7,8,9];
-        $donates = Donate::where('active' , true)->where('school' , Auth::user()->school)->get();
-        if(Auth::user()->hasRole('مدير'))
-        $donates = Donate::where('active' , true)->get();
+        $fosol = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        $donates = Donate::where('active', true)->where('school', Auth::user()->school)->get();
+
+        if (Auth::user()->hasRole('مدير'))
+
+            $donates = Donate::where('active', true)->get();
         if (isset($_GET['name']) || isset($_GET['school']) || isset($_GET['saf']) || isset($_GET['fasle'])) {
             $name   = $_GET['name'] ?? '';
             $school = $_GET['school'] ?? '';
             $saf    = $_GET['saf'] ?? '';
             $fasle  = $_GET['fasle'] ?? '';
-            $donates = Donate::where('active' , true)
-                ->where('school' , Auth::user()->school)
+            $donates = Donate::where('active', true)
+                ->where('school', Auth::user()->school)
                 ->where(
                     [
                         ['name', 'like', "%$name%"],
-                        ['school' , 'like' , "%$school%"],
-                        ['saf' , 'like' , "%$saf%"],
-                        ['fasle' , 'like' , "%$fasle%"],
+                        ['school', 'like', "%$school%"],
+                        ['saf', 'like', "%$saf%"],
+                        ['fasle', 'like', "%$fasle%"],
                     ]
                 )
                 // ->orWhere('school' , 'like' , "%$school%")
@@ -599,7 +609,7 @@ Route::group(['middleware' => 'auth'] , function(){
                 // ->paginate(7);
                 ->get();
         }
-        return view('donate.active' , [
+        return view('donate.active', [
             'title' => 'المشاركات الموافق عليها',
             'donates' => $donates,
             'schools' => $schools,
@@ -607,38 +617,39 @@ Route::group(['middleware' => 'auth'] , function(){
             'fosol' => $fosol,
         ]);
     })
-    ->middleware(['permission:المشاركات الموافق عليها'])
-    ->name('donate.active');
+        ->middleware(['permission:المشاركات الموافق عليها'])
+        ->name('donate.active');
+
     // المشاركات غير الموافق عليها
-    Route::get('/donate/noactive' , function(){
+    Route::get('/donate/noactive', function () {
         $school = Auth::user()->school;
-        if(Auth::user()->hasRole('مدير')){
+        if (Auth::user()->hasRole('مدير')) {
             $donates = Donate::all();
-        }else{
-            $donates = Donate::where('school' , $school)->get();
+        } else {
+            $donates = Donate::where('school', $school)->get();
         }
-        return view('donate.nonactive' , [
+        return view('donate.nonactive', [
             'title' => 'المشاركات غير الموافق عليها',
             'donates' => $donates
         ]);
     })
-    ->middleware(['permission:المشاركات غير الموافق عليها'])
-    ->name('donate.noactive');
+        ->middleware(['permission:المشاركات غير الموافق عليها'])
+        ->name('donate.noactive');
     // الموافقة أو إلغاء الموافقة
-    Route::post('/donate/status/{id}' , function($id){
+    Route::post('/donate/status/{id}', function ($id) {
         $donate = Donate::findOrFail($id);
         $donate->active = !$donate->active;
         $donate->save();
-        return back()->with('status' , 'تمت العملية بنجاح');
+        return back()->with('status', 'تمت العملية بنجاح');
     })
-    ->middleware(['permission:قسم المشاركات'])
-    ->name('donate.status');
+        ->middleware(['permission:قسم المشاركات'])
+        ->name('donate.status');
     // حذف
-    Route::post('/donate/delete/{id}' , function($id){
+    Route::post('/donate/delete/{id}', function ($id) {
         $donate = Donate::findOrFail($id);
         $donate->delete();
-        return back()->with('delete' , 'تمت عملية الحذف بنجاح');
+        return back()->with('delete', 'تمت عملية الحذف بنجاح');
     })
-    ->middleware(['permission:قسم المشاركات'])
-    ->name('donate.delete');
+        ->middleware(['permission:قسم المشاركات'])
+        ->name('donate.delete');
 });

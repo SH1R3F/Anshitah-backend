@@ -4,10 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\YearController;
-use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\InquiryController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SupportController;
+use App\Http\Controllers\Api\DonationController;
+use App\Http\Controllers\Api\Auth\AuthController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -52,5 +53,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{ticket}/close', [InquiryController::class, 'close']);
         Route::delete('/{ticket}', [InquiryController::class, 'delete']);
         Route::post('/{ticket}/messages', [InquiryController::class, 'message']);
+    });
+
+    /* Donate shares Routes */
+    Route::prefix('donates')->group(function () {
+        // Teachers donations
+        Route::get('/teachers', [DonationController::class, 'teachers']);
+
+        // Students donations
+        Route::get('/students', [DonationController::class, 'students']);
+        Route::delete('/students/{donate}', [DonationController::class, 'delete']);
+        Route::put('/students/{donate}', [DonationController::class, 'toggle']);
     });
 });
