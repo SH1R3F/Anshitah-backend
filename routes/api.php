@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\YearController;
+use App\Http\Controllers\Api\KhotatController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SupportController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\NamadijController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -56,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     /* Donate shares Routes */
-    Route::prefix('donates')->group(function () {
+    Route::prefix('donates')->middleware(['permission:قسم المشاركات'])->group(function () {
         // Teachers donations
         Route::get('/teachers', [DonationController::class, 'teachers']);
 
@@ -64,5 +66,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/students', [DonationController::class, 'students']);
         Route::delete('/students/{donate}', [DonationController::class, 'delete']);
         Route::put('/students/{donate}', [DonationController::class, 'toggle']);
+    });
+
+
+    /* Manage khotat & Namadij */
+    Route::middleware(['permission:قسم الخطط و النماذج'])->group(function () {
+        // I know you're thinking why not plans?
+        // I received the project having two different types of "plans" pages. One of them was already named Khotat. So i'll keep on it.
+        Route::resource('khotat', KhotatController::class)->except(['edit', 'create']);
+        Route::resource('namadij', NamadijController::class)->except(['edit', 'create']);
     });
 });

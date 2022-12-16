@@ -23,7 +23,7 @@ class YearController extends Controller
         return YearCollection::make($years);
     }
 
-    public function store(YearRequest $request)
+    public function store(YearRequest $request): Response
     {
         Year::create($request->validated());
         return response()->noContent(Response::HTTP_CREATED); // 201
