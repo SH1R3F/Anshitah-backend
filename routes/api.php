@@ -76,4 +76,24 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('khotat', KhotatController::class)->except(['edit', 'create']);
         Route::resource('namadij', NamadijController::class)->except(['edit', 'create']);
     });
+
+    /* Technical support; users side */
+    Route::prefix('/technical-support')->middleware(['permission:محادثة الدعم الفني'])->group(function () {
+        Route::get('/', [SupportController::class, 'userTickets']);
+        Route::post('/', [SupportController::class, 'newTicket']);
+        Route::get('/{ticket}', [SupportController::class, 'userTicket']);
+        Route::delete('/{ticket}', [SupportController::class, 'deleteTicket']);
+        Route::post('/{ticket}/messages', [SupportController::class, 'newMessage']);
+        Route::post('/{ticket}/toggle', [SupportController::class, 'toggle']);
+    });
+
+    /* Inquiries support; users side */
+    Route::prefix('/inquiries')->middleware(['permission:محادثة الدعم الفني'])->group(function () {
+        Route::get('/', [InquiryController::class, 'userTickets']);
+        Route::post('/', [InquiryController::class, 'newTicket']);
+        Route::get('/{ticket}', [InquiryController::class, 'userTicket']);
+        Route::delete('/{ticket}', [InquiryController::class, 'deleteTicket']);
+        Route::post('/{ticket}/messages', [InquiryController::class, 'newMessage']);
+        Route::post('/{ticket}/toggle', [InquiryController::class, 'toggle']);
+    });
 });
