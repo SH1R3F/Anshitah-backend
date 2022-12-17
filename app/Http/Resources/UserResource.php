@@ -27,15 +27,16 @@ class UserResource extends JsonResource
             'university' => $this->university,
             'school' => $this->school,
             'field' => $this->field,
-            'classes' => $this->when($this->classes, json_decode($this->classes)),
+            'classes' => $this->when(is_array($this->classes), $this->classes, json_decode($this->classes)),
             'takhasos' => $this->takhasos,
             'date_graduation' => $this->date_graduation,
             'date_job' => $this->date_job,
             'current_job' => $this->current_job,
             'rakm_wadifi' => $this->rakm_wadifi,
-            'date_birth' => $this->date_birth,
-            'role'       => $this->when($this->role, $this->role, $this->whenLoaded('roles', $this->roles()->first()->name))
-            // $this->merge(parent::toArray($request))
+            'date_birth'   => $this->date_birth,
+            'date_birth'   => $this->date_birth,
+            'role'         => $this->when($this->role, $this->role, $this->whenLoaded('roles', $this->roles()->first()->name)),
+            'points_sum'   => $this->when($this->points_sum_point, intval($this->points_sum_point), 0),
         ];
     }
 }

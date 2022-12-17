@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Point;
 use App\Traits\Searchable;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\HasApiTokens;
@@ -76,6 +77,11 @@ class User extends Authenticatable
     public function folders()
     {
         return $this->hasMany(Folder::class);
+    }
+
+    public function points()
+    {
+        return $this->hasMany(Point::class);
     }
 
     public function setAvatarAttribute($value)

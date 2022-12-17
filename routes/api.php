@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\SupportController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\NamadijController;
+use App\Http\Controllers\Api\PointController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -96,4 +97,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{ticket}/messages', [InquiryController::class, 'newMessage']);
         Route::post('/{ticket}/toggle', [InquiryController::class, 'toggle']);
     });
+
+    /* My points section */
+    Route::prefix('/points')->middleware(['permission:برنامج نقاطي'])->group(function () {
+        Route::get('/', [PointController::class, 'index']);
+        Route::post('/{user}', [PointController::class, 'point']);
+    });
+    Route::get('my-points', [PointController::class, 'myPoints'])->middleware(['permission:نقاطي للطلاب']);
 });

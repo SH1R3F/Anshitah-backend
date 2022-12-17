@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\YearCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserController extends Controller
@@ -23,12 +24,22 @@ class UserController extends Controller
 
     public function stats(): JsonResponse
     {
+        $years = [];
+        Year::orderBy('id')->get()->each(function ($year) use (&$years) {
+            foreach (json_decode($year->classes) as $class)
+                array_push($years, [
+                    'label' => "{$year->name} / $class",
+                    'value' => "{$year->id}_$class"
+                ]);
+        });
+
         return response()->json([
             'admins'   => User::whereHas('roles', fn ($query) => $query->where('name', 'مدير'))->count(),
             'teachers' => User::whereHas('roles', fn ($query) => $query->where('name', 'معلم'))->count(),
             'pioneers' => User::whereHas('roles', fn ($query) => $query->where('name', 'رائد نشاط'))->count(),
             'students' => User::whereHas('roles', fn ($query) => $query->where('name', 'طالب'))->count(),
-            'roles'    => Role::orderBy('id')->pluck('name')
+            'roles'    => Role::orderBy('id')->pluck('name'),
+            'classes'  => $years
         ]);
     }
 
@@ -60,7 +71,7 @@ class UserController extends Controller
 
     public function store(UserRequest $request): Response
     {
-        $user = User::create($request->validated() + ['password' => Hash::make($request->password)]);
+        $user = User::create(['password' => Hash::make($request->password)] + $request->validated());
         $user->syncRoles(Role::where('name', $request->role)->first());
         return response()->noContent(Response::HTTP_CREATED); // 201
     }

@@ -55,10 +55,6 @@ class UpdateUser
             $user->syncRoles(Role::where('name', $request->role)->first());
         }
 
-        if ($data['classes']) {
-            $data['classes'] = json_encode(explode(',', $data['classes']));
-        }
-
         $user->update($data);
     }
 }

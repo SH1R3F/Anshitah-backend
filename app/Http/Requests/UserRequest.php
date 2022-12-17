@@ -58,4 +58,15 @@ class UserRequest extends FormRequest
             'classes'         => 'filled'
         ];
     }
+
+    public function validated()
+    {
+        $request = $this->validator->validated();
+
+        if ($this->classes) {
+            $request['classes'] = json_encode(explode(',', $this->classes));
+        }
+
+        return $request;
+    }
 }
