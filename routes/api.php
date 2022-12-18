@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AgendaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
@@ -104,4 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{user}', [PointController::class, 'point']);
     });
     Route::get('my-points', [PointController::class, 'myPoints'])->middleware(['permission:نقاطي للطلاب']);
+
+    /* Agendas management */
+    Route::resource('agendas', AgendaController::class)->except(['edit', 'create'])->middleware(['permission:قسم أجندة']);
 });
