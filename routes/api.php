@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\NamadijController;
 use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\QiasAdaaController;
 use App\Http\Controllers\Api\QuestionnaireController;
+use App\Http\Controllers\Api\TrainingController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -118,6 +119,9 @@ Route::middleware('auth:sanctum')->group(function () {
     /* Online content management */
     Route::resource('contents', ContentController::class)->except(['edit', 'create'])->middleware(['permission:عرض المحتوى الإلكتروني']);
 
-    /* Online content management */
+    /* Questionnaires management */
     Route::resource('questionnaires', QuestionnaireController::class)->except(['edit', 'create'])->middleware(['permission:عرض الإستبيانات']);
+
+    /* Training plans management */
+    Route::resource('trainings', TrainingController::class)->except(['edit', 'create'])->middleware(['permission:عرض خطط التدريب']);
 });
