@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\NamadijController;
 use App\Http\Controllers\Api\PointController;
+use App\Http\Controllers\Api\QiasAdaaController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -108,4 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /* Agendas management */
     Route::resource('agendas', AgendaController::class)->except(['edit', 'create'])->middleware(['permission:قسم أجندة']);
+
+    /* Qias-adaa management */
+    Route::resource('qias-adaa', QiasAdaaController::class)->except(['edit', 'create'])->middleware(['permission:عرض قياس الأداء']);
 });
