@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SupportController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\NamadijController;
 use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\QiasAdaaController;
@@ -112,4 +113,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /* Qias-adaa management */
     Route::resource('qias-adaa', QiasAdaaController::class)->except(['edit', 'create'])->middleware(['permission:عرض قياس الأداء']);
+
+    /* Online content management */
+    Route::resource('contents', ContentController::class)->except(['edit', 'create'])->middleware(['permission:عرض المحتوى الإلكتروني']);
 });

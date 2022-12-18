@@ -46,7 +46,7 @@ class NamadijController extends Controller
 
         // Upload file
         if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('khotats', ['disk' => 'public']);
+            $path = $request->file('file')->store('namadijs', ['disk' => 'public']);
             $data['file'] = env('STORAGE_PATH') . 'app/public/' . $path;
         }
 
