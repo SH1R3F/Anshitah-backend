@@ -64,7 +64,7 @@ class UserRequest extends FormRequest
         $request = $this->validator->validated();
 
         if ($this->classes) {
-            $request['classes'] = json_encode(explode(',', $this->classes));
+            $request['classes'] = json_encode(is_array($this->classes) ? $this->classes : explode(',', $this->classes));
         }
 
         return $request;

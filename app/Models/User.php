@@ -86,16 +86,16 @@ class User extends Authenticatable
 
     public function setAvatarAttribute($value)
     {
-        $this->attributes['avatar'] = $value === 'null' ? NULL : str_replace('http://localhost:8000/', '', $value);
+        $this->attributes['avatar'] = $value == 'null' ? NULL : str_replace('http://anshitah.com/anshita/', '', $value);
     }
 
     public function setMilafWadifiAttribute($value)
     {
-        $this->attributes['milaf_wadifi'] = $value === 'null' ? NULL : str_replace('http://localhost:8000/', '', $value);
+        $this->attributes['milaf_wadifi'] = $value == 'null' ? NULL : str_replace('http://anshitah.com/anshita/', '', $value);
     }
 
     public function setMilafHowiyaAttribute($value)
     {
-        $this->attributes['milaf_howiya'] = $value === 'null' ? NULL : str_replace('http://localhost:8000/', '', $value);
+        $this->attributes['milaf_howiya'] = $value == 'null' ? NULL : str_replace('http://anshitah.com/anshita/', '', $value);
     }
 }

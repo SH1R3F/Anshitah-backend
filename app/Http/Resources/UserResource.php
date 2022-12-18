@@ -16,7 +16,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'avatar' => $this->when($this->avatar, url($this->avatar), null),
-            'milaf_howiya' => $this->when($this->avatar, url($this->milaf_howiya), null),
+            'milaf_howiya' => $this->when($this->milaf_howiya, url($this->milaf_howiya), null),
             'milaf_wadifi' => $this->when($this->milaf_wadifi, url($this->milaf_wadifi), null),
             'al_jadwal_dirassi' => $this->when($this->al_jadwal_dirassi, url($this->al_jadwal_dirassi), null),
             'name' => $this->name,
