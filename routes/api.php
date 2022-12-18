@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\NamadijController;
 use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\QiasAdaaController;
+use App\Http\Controllers\Api\QuestionnaireController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -116,4 +117,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /* Online content management */
     Route::resource('contents', ContentController::class)->except(['edit', 'create'])->middleware(['permission:عرض المحتوى الإلكتروني']);
+
+    /* Online content management */
+    Route::resource('questionnaires', QuestionnaireController::class)->except(['edit', 'create'])->middleware(['permission:عرض الإستبيانات']);
 });
