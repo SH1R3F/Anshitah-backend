@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AchievementController;
 use App\Http\Controllers\Api\AgendaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RoleController;
@@ -124,4 +125,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /* Training plans management */
     Route::resource('trainings', TrainingController::class)->except(['edit', 'create'])->middleware(['permission:عرض خطط التدريب']);
+
+    /* Achievements management */
+    Route::resource('achievements', AchievementController::class)->except(['edit', 'create'])->middleware(['permission:قسم المراكز و المنجزات']);
+
+    //قسم المراكز و المنجزات
+
 });
