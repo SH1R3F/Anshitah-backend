@@ -18,6 +18,11 @@ use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\QiasAdaaController;
 use App\Http\Controllers\Api\QuestionnaireController;
 use App\Http\Controllers\Api\TrainingController;
+use App\Http\Controllers\Api\VisitController;
+
+Route::get('/', function () {
+    return 'Api';
+});
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -129,6 +134,7 @@ Route::middleware('auth:sanctum')->group(function () {
     /* Achievements management */
     Route::resource('achievements', AchievementController::class)->except(['edit', 'create'])->middleware(['permission:قسم المراكز و المنجزات']);
 
-    //قسم المراكز و المنجزات
-
+    /* Visits management */
+    Route::get('visits/print', [VisitController::class, 'print'])->middleware(['permission:قسم الحجوزات']);
+    Route::resource('visits', VisitController::class)->except(['edit', 'create'])->middleware(['permission:قسم الحجوزات']);
 });

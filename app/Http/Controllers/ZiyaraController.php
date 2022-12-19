@@ -6,6 +6,7 @@ use App\Models\Ziyara;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PDF;
+
 class ZiyaraController extends Controller
 {
 

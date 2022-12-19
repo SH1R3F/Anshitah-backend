@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Point;
+use App\Models\Ziyara;
 use App\Traits\Searchable;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\HasApiTokens;
@@ -82,6 +83,11 @@ class User extends Authenticatable
     public function points()
     {
         return $this->hasMany(Point::class);
+    }
+
+    public function ziyaras()
+    {
+        return $this->hasMany(Ziyara::class);
     }
 
     public function setAvatarAttribute($value)
