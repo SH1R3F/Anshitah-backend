@@ -26,6 +26,8 @@ class PointController extends Controller
             ->orderBy('points_sum', 'DESC')
             ->when($request->school, fn ($builder) => $builder->where('users.school', $request->school))
             ->when($request->year, fn ($builder) => $builder->where('users.classes', 'LIKE', "%[\"{$request->year}_%"))
+            ->when($request->class, fn ($builder) => $builder->where('users.classes', 'LIKE', "%_{$request->class}\"]"))
+            ->when(request()->user()->hasRole('معلم'), fn ($builder) => $builder->where('users.school', request()->user()->hasRole('معلم')->school))
             ->paginate(is_numeric($request->perPage) ? $request->perPage : 10, ['*'], 'page', is_numeric($request->currentPage) ? $request->currentPage : 1);
 
         $years = Year::pluck('name', 'id');
@@ -46,18 +48,24 @@ class PointController extends Controller
 
         $query = $user->points()->where('point', $request->point);
 
-        // Only 3 per day
-        if ($query->where('created_at', '>=', Carbon::today())->count() >= 3) {
-            return response()->json([
-                'message' => 'تم بالفعل تغيير 3 نقط لهذا الطالب اليوم.'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        if (request()->user()->hasRole('معلم')) {
 
-        // Only 15 per month
-        if ($query->where('created_at', '>=', Carbon::now()->startOfWeek())->count() >= 15) {
-            return response()->json([
-                'message' => 'تم بالفعل تغيير 15 نقط لهذا الطالب هذا الأسبوع.'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            // Only can control his school students
+            if ($user->school != request()->user()->school) return;
+
+            // Only 3 per day
+            if ($query->where('created_at', '>=', Carbon::today())->count() >= 3) {
+                return response()->json([
+                    'message' => 'تم بالفعل تغيير 3 نقط لهذا الطالب اليوم.'
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            // Only 15 per month
+            if ($query->where('created_at', '>=', Carbon::now()->startOfWeek())->count() >= 15) {
+                return response()->json([
+                    'message' => 'تم بالفعل تغيير 15 نقط لهذا الطالب هذا الأسبوع.'
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         }
 
         // Add

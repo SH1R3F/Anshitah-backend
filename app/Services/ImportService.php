@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Imports\StudentsImport;
 use App\Models\User;
 use App\Models\Year;
 use Maatwebsite\Excel\Facades\Excel;
@@ -12,7 +13,11 @@ class ImportService
 
     public function import($type, $file)
     {
-        if ($type == 'students') $this->importStudents($file);
+        if ($type == 'students') {
+            Excel::import(new StudentsImport, $file);
+            return true;
+            //$this->importStudents($file);
+        }
     }
 
 

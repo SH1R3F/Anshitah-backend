@@ -26,10 +26,14 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $request->validate([
-            'email' => 'required|email',
+            'credential' => 'required',
             'password' => 'required'
         ]);
-        if (!Auth::attempt($request->only('email', 'password'))) {
+
+        $fieldType = filter_var($request->credential, FILTER_VALIDATE_EMAIL) ? 'email' : 'rakm_howiya';
+
+        if (!Auth::attempt(array($fieldType => $request->credential, 'password' => $request->password))) {
+            // if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Unauthorized'
             ], Response::HTTP_UNAUTHORIZED); // 401
