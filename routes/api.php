@@ -1,25 +1,27 @@
 <?php
 
-use App\Http\Controllers\Api\AchievementController;
-use App\Http\Controllers\Api\AgendaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\YearController;
+use App\Http\Controllers\Api\PointController;
+use App\Http\Controllers\Api\VisitController;
+use App\Http\Controllers\Api\AgendaController;
 use App\Http\Controllers\Api\KhotatController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\InquiryController;
+use App\Http\Controllers\Api\NamadijController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SupportController;
 use App\Http\Controllers\Api\DonationController;
-use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\Api\ContentController;
-use App\Http\Controllers\Api\NamadijController;
-use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\QiasAdaaController;
+use App\Http\Controllers\Api\TrainingController;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\AchievementController;
+use App\Http\Controllers\Api\MonthlyReportController;
 use App\Http\Controllers\Api\QuestionnaireController;
 use App\Http\Controllers\Api\SupervisorVisitController;
-use App\Http\Controllers\Api\TrainingController;
-use App\Http\Controllers\Api\VisitController;
 
 Route::get('/', function () {
     return 'Api';
@@ -138,7 +140,21 @@ Route::middleware('auth:sanctum')->group(function () {
     /* Visits management */
     Route::get('visits/print', [VisitController::class, 'print'])->middleware(['permission:قسم الحجوزات']);
     Route::resource('visits', VisitController::class)->except(['edit', 'create'])->middleware(['permission:قسم الحجوزات']);
-
+    // Supervisor visits
     Route::get('supervisor-visits/{supervisor_visit}/print', [SupervisorVisitController::class, 'print'])->middleware(['permission:قسم الزيارات']);
     Route::resource('supervisor-visits', SupervisorVisitController::class)->except(['edit', 'create'])->middleware(['permission:قسم الزيارات']);
+
+    /* Reports management */
+    Route::middleware(['permission:عرض التقارير'])->group(function () {
+        // Reports
+        Route::get('reports/{report}/evaluation', [ReportController::class, 'evaluation']);
+        Route::put('reports/{report}/evaluation', [ReportController::class, 'evaluate']);
+        Route::get('reports/{report}/evaluation/print', [ReportController::class, 'printEvaluation']);
+        Route::get('reports/{report}/print', [ReportController::class, 'print']);
+        Route::resource('reports', ReportController::class)->except(['edit', 'create']);
+
+        // Monthly reports
+        Route::get('monthly-reports/{monthly_report}/print', [MonthlyReportController::class, 'print']);
+        Route::resource('monthly-reports', MonthlyReportController::class)->except(['edit', 'create']);
+    });
 });

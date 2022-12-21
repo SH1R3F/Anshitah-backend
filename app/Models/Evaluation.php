@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Report;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Evaluation extends Model
 {
@@ -27,7 +28,8 @@ class Evaluation extends Model
         'total',
         'report_id',
     ];
-    public function report(){
-        return $this->hasOne(Evaluation::class);
+    public function report()
+    {
+        return $this->belongsTo(Report::class);
     }
 }
