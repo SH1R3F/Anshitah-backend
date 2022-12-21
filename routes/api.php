@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\NamadijController;
 use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\QiasAdaaController;
 use App\Http\Controllers\Api\QuestionnaireController;
+use App\Http\Controllers\Api\SupervisorVisitController;
 use App\Http\Controllers\Api\TrainingController;
 use App\Http\Controllers\Api\VisitController;
 
@@ -137,4 +138,7 @@ Route::middleware('auth:sanctum')->group(function () {
     /* Visits management */
     Route::get('visits/print', [VisitController::class, 'print'])->middleware(['permission:قسم الحجوزات']);
     Route::resource('visits', VisitController::class)->except(['edit', 'create'])->middleware(['permission:قسم الحجوزات']);
+
+    Route::get('supervisor-visits/{supervisor_visit}/print', [SupervisorVisitController::class, 'print'])->middleware(['permission:قسم الزيارات']);
+    Route::resource('supervisor-visits', SupervisorVisitController::class)->except(['edit', 'create'])->middleware(['permission:قسم الزيارات']);
 });

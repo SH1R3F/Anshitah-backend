@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Mpdf\Mpdf;
 use App\Models\Ziyara;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

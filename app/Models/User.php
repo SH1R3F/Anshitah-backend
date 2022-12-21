@@ -6,6 +6,7 @@ use App\Models\Point;
 use App\Models\Ziyara;
 use App\Traits\Searchable;
 use Illuminate\Http\Request;
+use App\Models\ZiyaratMochrif;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -67,6 +68,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'id' => 'integer'
     ];
 
     public function scopeFilter($builder, Request $request)
@@ -88,6 +90,11 @@ class User extends Authenticatable
     public function ziyaras()
     {
         return $this->hasMany(Ziyara::class);
+    }
+
+    public function ziyaratmochrifs()
+    {
+        return $this->hasMany(ZiyaratMochrif::class);
     }
 
     public function setAvatarAttribute($value)
