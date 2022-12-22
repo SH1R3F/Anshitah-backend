@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\YearController;
@@ -157,4 +158,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('monthly-reports/{monthly_report}/print', [MonthlyReportController::class, 'print']);
         Route::resource('monthly-reports', MonthlyReportController::class)->except(['edit', 'create']);
     });
+
+    /* Quizzes management */
+    Route::resource('quizzes', QuizController::class)->except(['edit', 'create'])->middleware(['permission:عرض الإختبارات']);
 });

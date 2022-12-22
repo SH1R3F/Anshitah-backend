@@ -16,12 +16,15 @@ class CreateQuestionsTable extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('file' , 500)->nullable(true);
+            $table->string('file', 500)->nullable(true);
             $table->string('answer');
-            $table->string('topic' , 500);
+            $table->string('wrong_answer1')->nullable();
+            $table->string('wrong_answer2')->nullable();
+            $table->string('wrong_answer3')->nullable();
+            $table->string('topic', 500);
             $table->integer('mark'); //نقطة السؤال
             $table->unsignedBigInteger('quiz_id');
-            $table->foreign('quiz_id')->references('id')->on('quizzes');
+            $table->foreign('quiz_id')->references('id')->on('quizzes')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->timestamps();
         });
     }
