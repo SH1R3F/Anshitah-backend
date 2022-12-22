@@ -5,9 +5,8 @@ namespace App\Services;
 
 use Mpdf\Mpdf;
 use App\Models\Report;
-use App\Models\Ziyara;
-use App\Models\Evaluation;
 use App\Models\MonthlyReport;
+use App\Models\TeacherNashat;
 use App\Models\ZiyaratMochrif;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -362,6 +361,191 @@ class PDFService
                         <td style='padding: .6em 1em; border: 1px solid lightgrey; font-weight: bold; text-align: center;'>{$report->evaluation->total}</td>
                     </tr>";
 
+        $html .= '</tbody>';
+        $html .= '</table>';
+
+        // Load a stylesheet
+        $this->mpdf->WriteHTML($html);
+        $path = 'app/public/print.pdf';
+        $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
+        return $path;
+    }
+
+    public function exportStudentalActivities(Collection $activities)
+    {
+        $html = '<table data-table-theme="default zebra" style="margin: 0 auto; color: #333; background: white; border: 1px solid grey; font-size: 12pt; border-collapse: collapse;">';
+        $html .= '<thead>
+                    <tr>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">الاسم</th>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">عمله بالمجلس</th>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">الملاحظات</th>
+                    </tr>
+                </thead>';
+        $html .= '<tbody>';
+        $x = 1;
+        $activities->each(function ($activity) use (&$html, &$x) {
+            $html .= "<tr " . ($x % 2 ? "" : "style='background: rgba(0,0,0,.05);'") . "> 
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>{$activity->name}</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>{$activity->work}</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>{$activity->note}</td>
+                    </tr>";
+            $x++;
+        });
+        $html .= '</tbody>';
+        $html .= '</table>';
+
+        // Load a stylesheet
+        $this->mpdf->WriteHTML($html);
+        $path = 'app/public/print.pdf';
+        $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
+        return $path;
+    }
+
+    public function exportTeacherActivity(TeacherNashat $teacher_nashat)
+    {
+        $html = '<table data-table-theme="default zebra" style="margin: 0 auto; color: #333; background: white; border: 1px solid grey; font-size: 12pt; border-collapse: collapse;">';
+        $html .= '<thead>
+                    <tr>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">الأندية والفرق</th>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">المشرف</th>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">الفرق التابعة</th>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">المقرر</th>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">الأعضاء</th>
+                    </tr>
+                </thead>';
+        $html .= '<tbody>';
+
+
+        // Scientific club
+        foreach ($teacher_nashat->nadi_3ilmi as $k => $row) {
+            $html .= "<tr style='background: rgba(0,0,0,.05);'>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_3ilmi) . "'>النادي العلمي</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+        // Cultural club
+        foreach ($teacher_nashat->nadi_taqafi as $k => $row) {
+            $html .= "<tr>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_taqafi) . "'>النادي الثقافي</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+        // Thinking club
+        foreach ($teacher_nashat->nadi_tafkir as $k => $row) {
+            $html .= "<tr style='background: rgba(0,0,0,.05);'>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_tafkir) . "'>نادي التفكير والإبداع</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+        // Giving club
+        foreach ($teacher_nashat->nadi_tatawo3 as $k => $row) {
+            $html .= "<tr>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_tatawo3) . "'>نادي العطاء والتطوع</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+        // Technical club
+        foreach ($teacher_nashat->nadi_mihani as $k => $row) {
+            $html .= "<tr style='background: rgba(0,0,0,.05);'>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_mihani) . "'>الفريق الفني والمهني</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+        // Athlete club
+        foreach ($teacher_nashat->nadi_sport as $k => $row) {
+            $html .= "<tr>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_sport) . "'>فريق التربية الرياضية</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+        // Scout club
+        foreach ($teacher_nashat->nadi_kachfi as $k => $row) {
+            $html .= "<tr style='background: rgba(0,0,0,.05);'>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_kachfi) . "'>الفريق الكشفي</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+        // Social club
+        foreach ($teacher_nashat->nadi_ijtima3i as $k => $row) {
+            $html .= "<tr>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_ijtima3i) . "'>الفريق الإجتماعي</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+        // Training and developing
+        foreach ($teacher_nashat->nadi_tadrib as $k => $row) {
+            $html .= "<tr style='background: rgba(0,0,0,.05);'>";
+            if ($k == 0) $html .= "<td style='padding: .6em; border: 1px solid lightgrey;' rowspan='" . count($teacher_nashat->nadi_tadrib) . "'>التدريب والتطوير</td>";
+            $html .=   "<td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['supervisor'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['teams'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['subject'] . "</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>" . $row['members'] . "</td>
+                    </tr>";
+        }
+
+
+        $html .= '</tbody>';
+        $html .= '</table>';
+
+        // Load a stylesheet
+        $this->mpdf->WriteHTML($html);
+        $path = 'app/public/print.pdf';
+        $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
+        return $path;
+    }
+
+    public function exportScholarActivities(Collection $activities)
+    {
+        $html = '<table data-table-theme="default zebra" style="margin: 0 auto; color: #333; background: white; border: 1px solid grey; font-size: 12pt; border-collapse: collapse;">';
+        $html .= '<thead>
+                    <tr>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">الاسم</th>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">عمله بالمجلس</th>
+                    <th style="color: #777; background: rgba(0,0,0,.1); padding: .6em; border: 1px solid lightgrey;">العمل المسند إليه</th>
+                    </tr>
+                </thead>';
+        $html .= '<tbody>';
+        $x = 1;
+        $activities->each(function ($activity) use (&$html, &$x) {
+            $html .= "<tr " . ($x % 2 ? "" : "style='background: rgba(0,0,0,.05);'") . "> 
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>{$activity->name}</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>{$activity->work}</td>
+                        <td style='padding: .6em; border: 1px solid lightgrey;'>{$activity->task}</td>
+                    </tr>";
+            $x++;
+        });
         $html .= '</tbody>';
         $html .= '</table>';
 

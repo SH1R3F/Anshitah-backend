@@ -22,4 +22,16 @@ class TeacherNashat extends Model
         'nadi_ijtima3i',
         'nadi_tadrib',
     ];
+
+    protected $casts = [
+        'nadi_3ilmi' => 'array',
+        'nadi_taqafi' => 'array',
+        'nadi_tafkir' => 'array',
+        'nadi_tatawo3' => 'array',
+        'nadi_mihani' => 'array',
+        'nadi_sport' => 'array',
+        'nadi_kachfi' => 'array',
+        'nadi_ijtima3i' => 'array',
+        'nadi_tadrib' => 'array',
+    ];
 }

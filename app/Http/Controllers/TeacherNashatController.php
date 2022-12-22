@@ -7,39 +7,40 @@ use Illuminate\Http\Request;
 use App\Models\TeacherNashat;
 use App\Models\User;
 use PDF;
+
 class TeacherNashatController extends Controller
 {
-     // عرض كل الأجندة
-     public function index()
-     {
-         $data = TeacherNashat::all();
-         return view('teacher-nashats.all', [
-             'title' => 'نشاطات المعلمين',
-             'data' => $data
-         ]);
-     }
+    // عرض كل الأجندة
+    public function index()
+    {
+        $data = TeacherNashat::all();
+        return view('teacher-nashats.all', [
+            'title' => 'نشاطات المعلمين',
+            'data' => $data
+        ]);
+    }
 
-     // إنشاء أجندة
-     public function create()
-     {
-         $users   = User::role('مشرفي النشاط')->get();
-         $members = User::role('مشرفي النشاط')->get();
-         $mokaririn = User::role('مشرفي النشاط')->get();
-         $equipes = [
-             'الربوت',
-             'الحاسب الآلي'
-         ];
-         return view('teacher-nashats.create', [
-             'title' => 'إنشاء نشاط',
-             'users' => $users,
-             'equipes' => $equipes,
-             'members' => $members,
-             'mokaririn' => $mokaririn,
-         ]);
-     }
+    // إنشاء أجندة
+    public function create()
+    {
+        $users   = User::role('رائد نشاط')->get();
+        $members = User::role('رائد نشاط')->get();
+        $mokaririn = User::role('رائد نشاط')->get();
+        $equipes = [
+            'الربوت',
+            'الحاسب الآلي'
+        ];
+        return view('teacher-nashats.create', [
+            'title' => 'إنشاء نشاط',
+            'users' => $users,
+            'equipes' => $equipes,
+            'members' => $members,
+            'mokaririn' => $mokaririn,
+        ]);
+    }
 
-     public function store(Request $request)
-     {
+    public function store(Request $request)
+    {
         $nadi_3ilmi = [
             'mochrif' => $request->mochrif1,
             'data' => $request->data1
@@ -76,7 +77,7 @@ class TeacherNashatController extends Controller
             'mochrif' => $request->mochrif9,
             'data' => $request->data9
         ];
-         $data = new TeacherNashat([
+        $data = new TeacherNashat([
             // 'raid' => $request->raid,
             // 'modir' => $request->modir,
             'raid' => 'رائد',
@@ -90,55 +91,55 @@ class TeacherNashatController extends Controller
             'nadi_kachfi' => json_encode($nadi_kachfi),
             'nadi_ijtima3i' => json_encode($nadi_ijtima3i),
             'nadi_tadrib' => json_encode($nadi_tadrib),
-         ]);
-         $data->save();
-         $msg = "تم انشاء النشاط بنجاح";
-         return back()->with('create', $msg);
-     }
+        ]);
+        $data->save();
+        $msg = "تم انشاء النشاط بنجاح";
+        return back()->with('create', $msg);
+    }
 
-     public function print($id)
-     {
-         $data = [
-             'data' => TeacherNashat::findOrFail($id),
-             'path' => public_path('assets/media/pdf-print/logo.png')
-         ];
-         $pdf = PDF::loadView('teacher-nashats.print', $data, [], [
-             'format' => 'A3-L',
-         ]);
-         return $pdf->stream('plan' . $data['data']->id . '.pdf');
-     }
+    public function print($id)
+    {
+        $data = [
+            'data' => TeacherNashat::findOrFail($id),
+            'path' => public_path('assets/media/pdf-print/logo.png')
+        ];
+        $pdf = PDF::loadView('teacher-nashats.print', $data, [], [
+            'format' => 'A3-L',
+        ]);
+        return $pdf->stream('plan' . $data['data']->id . '.pdf');
+    }
 
-     // تعديل الأجندة
-     public function edit($id)
-     {
-         $data = TeacherNashat::findOrFail($id);
-         dd($data);
-         return view(
-             'agendas.edit',
-             [
-                 'title' => 'تعديل الأجندة',
-                 'agenda' => $agenda
-             ]
-         );
-     }
-     public function update(Request $request, $id)
-     {
-         // dd($request->all());
-         $agenda = TeacherNashat::findOrFail($id);
-         $agenda->name = $request->name;
-         $agenda->date_begin = $request->date_begin;
-         $agenda->date_end = $request->date_end;
-         $agenda->save();
-         $msg = "ثم تعديل الأجندة بنجاح";
-         return back()->with('update', $msg);
-     }
+    // تعديل الأجندة
+    public function edit($id)
+    {
+        $data = TeacherNashat::findOrFail($id);
+        dd($data);
+        return view(
+            'agendas.edit',
+            [
+                'title' => 'تعديل الأجندة',
+                'agenda' => $data
+            ]
+        );
+    }
+    public function update(Request $request, $id)
+    {
+        // dd($request->all());
+        $agenda = TeacherNashat::findOrFail($id);
+        $agenda->name = $request->name;
+        $agenda->date_begin = $request->date_begin;
+        $agenda->date_end = $request->date_end;
+        $agenda->save();
+        $msg = "ثم تعديل الأجندة بنجاح";
+        return back()->with('update', $msg);
+    }
 
-     // حذف الأجندة
-     public function destroy($id)
-     {
-         $agenda = TeacherNashat::findOrFail($id);
-         $agenda->delete();
-         $msg = "ثم حذف النشاط بنجاح";
-         return back()->with('delete', $msg);
-     }
+    // حذف الأجندة
+    public function destroy($id)
+    {
+        $agenda = TeacherNashat::findOrFail($id);
+        $agenda->delete();
+        $msg = "ثم حذف النشاط بنجاح";
+        return back()->with('delete', $msg);
+    }
 }

@@ -22,7 +22,11 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\AchievementController;
 use App\Http\Controllers\Api\MonthlyReportController;
 use App\Http\Controllers\Api\QuestionnaireController;
+use App\Http\Controllers\Api\ScholarActivityController;
+use App\Http\Controllers\Api\StudentActivityController;
+use App\Http\Controllers\Api\StudentalActivityController;
 use App\Http\Controllers\Api\SupervisorVisitController;
+use App\Http\Controllers\Api\TeacherActivityController;
 
 Route::get('/', function () {
     return 'Api';
@@ -161,4 +165,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /* Quizzes management */
     Route::resource('quizzes', QuizController::class)->except(['edit', 'create'])->middleware(['permission:عرض الإختبارات']);
+
+    /* Activities management */
+    Route::prefix('activities')->middleware(['permission:قسم النشاط'])->group(function () {
+
+        // Students activity majles
+        Route::get('teacher-nashats/{teacher_nashat}/print', [TeacherActivityController::class, 'print']);
+        Route::resource('teacher-nashats', TeacherActivityController::class)->except(['edit', 'create']);
+
+        // Students activities
+        Route::resource('student-fields', StudentActivityController::class)->except(['edit', 'create']);
+
+        // Scholar activities
+        Route::get('school-nashats/print', [ScholarActivityController::class, 'print']);
+        Route::resource('school-nashats', ScholarActivityController::class)->except(['edit', 'create']);
+
+        // Students activity majles
+        Route::get('tolab-nashats/print', [StudentalActivityController::class, 'print']);
+        Route::resource('tolab-nashats', StudentalActivityController::class)->except(['edit', 'create']);
+    });
 });
