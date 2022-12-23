@@ -46,8 +46,8 @@ class QuizController extends Controller
 
     public function store(QuizRequest $request)
     {
-        Quiz::create($request->validated());
-        return response()->noContent(Response::HTTP_CREATED);
+        $quiz = Quiz::create($request->validated());
+        return QuizResource::make($quiz);
     }
 
 

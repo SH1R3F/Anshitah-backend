@@ -70,7 +70,7 @@ class PDFService
 
         // Load a stylesheet
         $this->mpdf->WriteHTML($html);
-        $path = 'app/public/print.pdf';
+        $path = 'app/public/pdfs/' . uniqid() . '.pdf';
         $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
         return $path;
     }
@@ -157,7 +157,7 @@ class PDFService
 
         // Load a stylesheet
         $this->mpdf->WriteHTML($html);
-        $path = 'app/public/print.pdf';
+        $path = 'app/public/pdfs/' . uniqid() . '.pdf';
         $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
         return $path;
     }
@@ -222,7 +222,7 @@ class PDFService
 
         // Load a stylesheet
         $this->mpdf->WriteHTML($html);
-        $path = 'app/public/print.pdf';
+        $path = 'app/public/pdfs/' . uniqid() . '.pdf';
         $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
         return $path;
     }
@@ -286,7 +286,7 @@ class PDFService
 
         // Load a stylesheet
         $this->mpdf->WriteHTML($html);
-        $path = 'app/public/print.pdf';
+        $path = 'app/public/pdfs/' . uniqid() . '.pdf';
         $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
         return $path;
     }
@@ -366,7 +366,7 @@ class PDFService
 
         // Load a stylesheet
         $this->mpdf->WriteHTML($html);
-        $path = 'app/public/print.pdf';
+        $path = 'app/public/pdfs/' . uniqid() . '.pdf';
         $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
         return $path;
     }
@@ -396,7 +396,7 @@ class PDFService
 
         // Load a stylesheet
         $this->mpdf->WriteHTML($html);
-        $path = 'app/public/print.pdf';
+        $path = 'app/public/pdfs/' . uniqid() . '.pdf';
         $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
         return $path;
     }
@@ -521,7 +521,7 @@ class PDFService
 
         // Load a stylesheet
         $this->mpdf->WriteHTML($html);
-        $path = 'app/public/print.pdf';
+        $path = 'app/public/pdfs/' . uniqid() . '.pdf';
         $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
         return $path;
     }
@@ -551,7 +551,7 @@ class PDFService
 
         // Load a stylesheet
         $this->mpdf->WriteHTML($html);
-        $path = 'app/public/print.pdf';
+        $path = 'app/public/pdfs/' . uniqid() . '.pdf';
         $this->mpdf->Output(storage_path($path), \Mpdf\Output\Destination::FILE);
         return $path;
     }
