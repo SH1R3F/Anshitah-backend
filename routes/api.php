@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\QiasAdaaController;
 use App\Http\Controllers\Api\TrainingController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\AchievementController;
+use App\Http\Controllers\Api\MedicalController;
 use App\Http\Controllers\Api\MonthlyReportController;
 use App\Http\Controllers\Api\QuestionnaireController;
 use App\Http\Controllers\Api\ScholarActivityController;
@@ -184,4 +185,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('tolab-nashats/print', [StudentalActivityController::class, 'print']);
         Route::resource('tolab-nashats', StudentalActivityController::class)->except(['edit', 'create']);
     });
+
+
+    /* Medical supervising management */
+    Route::resource('medicals', MedicalController::class)->middleware(['permission:الإشراف الطبي']);
 });
